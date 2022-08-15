@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(NamiConstant.API_PREFIX + "/mail")
-@RequiredArgsConstructor
 record EmailController(EmailClient emailClient) {
 
-    @GetMapping("/test")
-    void all(EmailDetails emailDetails) {
+    @GetMapping("/send")
+    void send(EmailDetails emailDetails) {
         emailClient.sendSimpleMail(emailDetails);
     }
 }

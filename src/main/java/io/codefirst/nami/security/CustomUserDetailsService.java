@@ -21,9 +21,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userService.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
         if (Objects.nonNull(user)) {
             return buildUserForAuthentication(user);
-        } else {
-            throw new UsernameNotFoundException("user with username " + username + " does not exist.");
         }
+        throw new UsernameNotFoundException("user with username " + username + " does not exist.");
     }
 
     private UserDetails buildUserForAuthentication(User user) {
