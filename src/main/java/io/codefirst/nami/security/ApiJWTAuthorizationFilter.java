@@ -8,13 +8,13 @@ import io.codefirst.nami.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -26,8 +26,8 @@ import java.util.*;
 
 public class ApiJWTAuthorizationFilter extends BasicAuthenticationFilter {
 
-    public ApiJWTAuthorizationFilter(AuthenticationManager authManager) {
-        super(authManager);
+    public ApiJWTAuthorizationFilter(AuthenticationManager authenticationManager) {
+        super(authenticationManager);
     }
 
     @Override
