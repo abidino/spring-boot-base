@@ -8,13 +8,14 @@ import io.codefirst.nami.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -47,11 +48,11 @@ public class ApiJWTAuthorizationFilter extends BasicAuthenticationFilter {
             authentication = getAuthentication(token);
         } catch (ExpiredJwtException exception) {
             ObjectMapper objectMapper = new ObjectMapper();
-            ErrorDto dto = new ErrorDto(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name(), "Oturumunuzun süresi dolmuş, lütfen tekrar giriş yapınız", new Date());
+            ErrorDto dto = new ErrorDto(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name(), ErrorMessageType.EXPIRE_TOKEN.getMessage(), new Date());
             res.resetBuffer();
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            res.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-            objectMapper.getFactory().configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
+            res.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+            objectMapper.getFactory().configure(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, true);
             res.getOutputStream().print(objectMapper.writeValueAsString(dto));
             res.flushBuffer();
             return;
@@ -61,6 +62,7 @@ public class ApiJWTAuthorizationFilter extends BasicAuthenticationFilter {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
+
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(String token) {

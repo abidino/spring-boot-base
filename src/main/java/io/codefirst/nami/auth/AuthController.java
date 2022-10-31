@@ -1,6 +1,6 @@
 package io.codefirst.nami.auth;
 
-import io.codefirst.nami.app.NamiConstant;
+import io.codefirst.nami.NamiApplication;
 import io.codefirst.nami.security.JwtTokenUtil;
 import io.codefirst.nami.security.SecurityConstant;
 import io.codefirst.nami.user.UserDto;
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(NamiConstant.API_PREFIX + "/auth")
+@RequestMapping(NamiApplication.API_PREFIX + "/auth")
 record AuthController(AuthClient authClient) {
 
     @PostMapping(value = "/login")
