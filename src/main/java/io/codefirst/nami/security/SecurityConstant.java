@@ -1,6 +1,10 @@
 package io.codefirst.nami.security;
 
-public interface SecurityConstant {
-    String SECRET = "!44VeRy$3cUr3S3creT";
-    String TOKEN_COOKIE_NAME = "token";
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class SecurityConstant {
+    public static final String SECRET = "!44VeRy$3cUr3S3creT";
+    public static final String TOKEN_COOKIE_NAME = "token";
 }

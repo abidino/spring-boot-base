@@ -18,7 +18,11 @@ public class WebSecurityFilterChain {
 
     @Autowired
     @Lazy
-    private AuthenticationManager authenticationManager;
+    public WebSecurityFilterChain(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    private final AuthenticationManager authenticationManager;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

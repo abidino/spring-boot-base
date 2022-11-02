@@ -8,12 +8,17 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 @Log4j2
 public record EmailService(JavaMailSender javaMailSender, Environment environment) {
     public void sendSimpleMail(EmailDetails details) {
         try {
             String sender = environment.getProperty("spring.mail.username");
+            if (Objects.isNull(sender)) {
+                throw new BadRequestException(ErrorMessageType.ERROR_MAIL_SEND.getMessage());
+            }
             SimpleMailMessage mailMessage = new SimpleMailMessage();
             mailMessage.setFrom(sender);
             mailMessage.setTo(details.recipient());

@@ -67,8 +67,7 @@ public class ApiJWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken getAuthentication(String token) {
         if (Objects.nonNull(token)) {
-            Claims claims;
-            claims = Jwts.parser()
+            Claims claims = Jwts.parser()
                     .setSigningKey(SecurityConstant.SECRET)
                     .parseClaimsJws(token)
                     .getBody();

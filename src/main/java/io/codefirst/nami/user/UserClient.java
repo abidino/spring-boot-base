@@ -9,17 +9,17 @@ import java.util.List;
 public record UserClient(UserMapper userMapper, UserService userService) {
     public List<UserResource> findAll() {
         List<User> userList = userService.findAll();
-        return userMapper.ToUserResource(userList);
+        return userMapper.toUserResource(userList);
     }
 
     public TokenResource authenticate(UserDto dto) {
-        User user = userMapper.ToUser(dto);
+        User user = userMapper.toUser(dto);
         return userService.authenticate(user);
     }
 
     public UserResource register(UserDto userDto) {
-        User user = userMapper.ToUser(userDto);
+        User user = userMapper.toUser(userDto);
         User savedUser = userService.save(user);
-        return userMapper.ToUserResource(savedUser);
+        return userMapper.toUserResource(savedUser);
     }
 }
