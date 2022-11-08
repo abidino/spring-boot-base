@@ -1,23 +1,39 @@
 package io.codefirst.nami.security;
 
 import io.codefirst.nami.auth.TokenResource;
+import io.codefirst.nami.exception.ErrorMessageType;
+import io.codefirst.nami.exception.GenericException;
 import io.codefirst.nami.user.User;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.Cookie;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public interface JwtTokenUtil {
-    long JWT_TOKEN_VALIDITY = 12 * 60 * 60 * 1000L;
 
+    String SECRET_KEY_ALGORITHM = "HmacSHA512";
     static TokenResource generateToken(User user) {
-        Map<String, Object> claims = new HashMap<>();
-        Date expireDate = new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY);
-        String token = doGenerateToken(claims, user.getUsername(), String.valueOf(user.getId()), expireDate);
-        return new TokenResource(token, expireDate);
+        String token = user.getUsername() + "&" + calculateHmac(user.getUsername());
+        return new TokenResource(token, null);
+    }
+
+    static String calculateHmac(String username) {
+        byte[] secretBytes = SecurityConstant.SECRET.getBytes(StandardCharsets.UTF_8);
+        byte[] valueBytes = username.getBytes(StandardCharsets.UTF_8);
+
+        try {
+            Mac mac = Mac.getInstance(SECRET_KEY_ALGORITHM);
+            SecretKeySpec sec = new SecretKeySpec(secretBytes, SECRET_KEY_ALGORITHM);
+            mac.init(sec);
+            byte[] hmacBytes = mac.doFinal(valueBytes);
+            return Base64.getEncoder().encodeToString(hmacBytes);
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new GenericException(ErrorMessageType.GENERIC_ERROR.getMessage());
+        }
     }
 
     static Cookie generateCookie(String key, String value) {
@@ -28,17 +44,4 @@ public interface JwtTokenUtil {
         cookie.setPath("/");
         return cookie;
     }
-
-    private static String doGenerateToken(
-            Map<String, Object> claims, String subject, String id, Date expireDate) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setId(id)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS512, SecurityConstant.SECRET)
-                .compact();
-    }
-
 }

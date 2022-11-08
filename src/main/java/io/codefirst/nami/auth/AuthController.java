@@ -25,6 +25,13 @@ record AuthController(AuthClient authClient) {
         response.addCookie(cookie);
     }
 
+    @PostMapping(value = "/logout")
+    void logout(HttpServletResponse response) {
+        Cookie cookie = JwtTokenUtil.generateCookie(SecurityConstant.TOKEN_COOKIE_NAME, null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+
     @PostMapping("/register")
     UserResource save(@RequestBody @Valid UserDto userDto) {
         return authClient.register(userDto);

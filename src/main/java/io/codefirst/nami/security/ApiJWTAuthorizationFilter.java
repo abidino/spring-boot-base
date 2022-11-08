@@ -1,17 +1,8 @@
 package io.codefirst.nami.security;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.codefirst.nami.exception.ErrorDto;
 import io.codefirst.nami.exception.ErrorMessageType;
 import io.codefirst.nami.exception.UnauthorizedException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +14,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
 
 public class ApiJWTAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -46,16 +40,6 @@ public class ApiJWTAuthorizationFilter extends BasicAuthenticationFilter {
 
         try {
             authentication = getAuthentication(token);
-        } catch (ExpiredJwtException exception) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            ErrorDto dto = new ErrorDto(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name(), ErrorMessageType.EXPIRE_TOKEN.getMessage(), new Date());
-            res.resetBuffer();
-            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            res.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-            objectMapper.getFactory().configure(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, true);
-            res.getOutputStream().print(objectMapper.writeValueAsString(dto));
-            res.flushBuffer();
-            return;
         } catch (Exception exception) {
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
@@ -66,19 +50,16 @@ public class ApiJWTAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(String token) {
-        if (Objects.nonNull(token)) {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(SecurityConstant.SECRET)
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            String username = claims.getSubject();
-
-            if (Objects.nonNull(username)) {
+        String[] values = token.split("&");
+        if (values.length == 2) {
+            String username = values[0];
+            String secret = values[1];
+            String calculateHmac = JwtTokenUtil.calculateHmac(username);
+            if (Objects.equals(secret, calculateHmac)) {
                 return new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
             }
-            throw new UnauthorizedException(ErrorMessageType.UNAUTHORIZED.getMessage());
         }
+
         throw new UnauthorizedException(ErrorMessageType.UNAUTHORIZED.getMessage());
     }
 
@@ -87,9 +68,7 @@ public class ApiJWTAuthorizationFilter extends BasicAuthenticationFilter {
             return null;
         }
 
-        List<Cookie> cookieList = Arrays.asList(cookies);
-        Optional<Cookie> optCookie = cookieList
-                .stream()
+        Optional<Cookie> optCookie = Arrays.stream(cookies)
                 .filter(cookie -> cookie.getName().equals(SecurityConstant.TOKEN_COOKIE_NAME))
                 .findFirst();
 

@@ -38,15 +38,23 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
             UsernameNotFoundException ex,
             WebRequest request) {
         ErrorDto dto = new ErrorDto(ex.getHttpStatus().value(), ex.getHttpStatus().name(), ex.getMessage(), new Date());
-        return handleExceptionInternal(ex, dto, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(ex, dto, new HttpHeaders(), ex.getHttpStatus(), request);
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleBadRequestException(
             BadRequestException ex,
             WebRequest request) {
-        ErrorDto dto = new ErrorDto(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage(), new Date());
-        return handleExceptionInternal(ex, dto, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        ErrorDto dto = new ErrorDto(ex.getHttpStatus().value(), ex.getHttpStatus().name(), ex.getMessage(), new Date());
+        return handleExceptionInternal(ex, dto, new HttpHeaders(), ex.getHttpStatus(), request);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> handleGenericException(
+            GenericException ex,
+            WebRequest request) {
+        ErrorDto dto = new ErrorDto(ex.getHttpStatus().value(), ex.getHttpStatus().name(), ex.getMessage(), new Date());
+        return handleExceptionInternal(ex, dto, new HttpHeaders(), ex.getHttpStatus(), request);
     }
 
     @ExceptionHandler

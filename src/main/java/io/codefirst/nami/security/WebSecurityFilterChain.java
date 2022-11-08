@@ -47,6 +47,9 @@ public class WebSecurityFilterChain {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .logout()
+                .deleteCookies(SecurityConstant.TOKEN_COOKIE_NAME)
+                .and()
                 .csrf()
                 .disable();
         return http.build();
