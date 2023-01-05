@@ -4,10 +4,10 @@ import io.codefirst.nami.auth.TokenResource;
 import io.codefirst.nami.exception.ErrorMessageType;
 import io.codefirst.nami.exception.GenericException;
 import io.codefirst.nami.user.User;
+import jakarta.servlet.http.Cookie;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.http.Cookie;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;

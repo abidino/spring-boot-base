@@ -5,14 +5,10 @@ import io.codefirst.nami.security.JwtTokenUtil;
 import io.codefirst.nami.security.SecurityConstant;
 import io.codefirst.nami.user.UserDto;
 import io.codefirst.nami.user.UserResource;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(NamiApplication.API_PREFIX + "/auth")
