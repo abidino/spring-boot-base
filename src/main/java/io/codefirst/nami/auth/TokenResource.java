@@ -1,6 +1,6 @@
 package io.codefirst.nami.auth;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
-public record TokenResource(String token, Date expireDate) {
+public record TokenResource(String token, LocalDateTime expireDate) {
 }

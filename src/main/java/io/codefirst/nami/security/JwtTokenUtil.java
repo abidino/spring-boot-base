@@ -11,6 +11,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Base64;
 
 public interface JwtTokenUtil {
@@ -18,7 +20,8 @@ public interface JwtTokenUtil {
     String SECRET_KEY_ALGORITHM = "HmacSHA512";
     static TokenResource generateToken(User user) {
         String token = user.getUsername() + "&" + calculateHmac(user.getUsername());
-        return new TokenResource(token, null);
+        LocalDateTime localDateTime = LocalDateTime.now().plusDays(1);
+        return new TokenResource(token, localDateTime);
     }
 
     static String calculateHmac(String username) {

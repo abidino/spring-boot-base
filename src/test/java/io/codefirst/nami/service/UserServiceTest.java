@@ -1,5 +1,6 @@
 package io.codefirst.nami.service;
 
+import io.codefirst.nami.auth.TokenResource;
 import io.codefirst.nami.exception.BadRequestException;
 import io.codefirst.nami.exception.UsernameNotFoundException;
 import io.codefirst.nami.user.User;
@@ -55,7 +56,8 @@ class UserServiceTest {
         Mockito.when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(new User(5L, "abidino", "test")));
         Mockito.when(passwordEncoder.matches(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(true);
         UserService userService = new UserService(userRepository, passwordEncoder);
-        Assertions.assertNotNull(userService.authenticate(user).token());
-        Assertions.assertNotNull(userService.authenticate(user).expireDate());
+        TokenResource tokenResource = userService.authenticate(user);
+        Assertions.assertNotNull(tokenResource.token());
+        Assertions.assertNotNull(tokenResource.expireDate());
     }
 }
