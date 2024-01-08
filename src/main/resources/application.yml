@@ -26,7 +26,3 @@ spring:
           auth: true
           starttls:
             enable: true
-springdoc:
-  swagger-ui:
-    url: "/v3/api-docs"
-    path: "/"
