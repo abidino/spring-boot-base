@@ -2,10 +2,8 @@ package dev.abidino.nami.user.infrastructere;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "users")
 public class UserEntity {
     @Id
     private String id;
@@ -20,21 +18,12 @@ public class UserEntity {
         this.password = password;
     }
 
-    public UserEntity(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
     public UserEntity() {
 
     }
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getUsername() {
