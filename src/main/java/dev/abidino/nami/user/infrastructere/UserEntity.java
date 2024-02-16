@@ -1,6 +1,9 @@
 package dev.abidino.nami.user.infrastructere;
 
+import dev.abidino.nami.user.domain.Role;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 
 @Entity
@@ -12,10 +15,14 @@ public class UserEntity {
 
     private String password;
 
-    public UserEntity(String id, String username, String password) {
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public UserEntity(String id, String username, String password, Role role) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
     public UserEntity() {
@@ -36,6 +43,10 @@ public class UserEntity {
 
     public String getPassword() {
         return password;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     public void setPassword(String password) {

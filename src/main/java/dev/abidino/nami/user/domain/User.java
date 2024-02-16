@@ -9,6 +9,8 @@ public class User {
 
     private String password;
 
+    private Role role;
+
     public String getId() {
         return id;
     }
@@ -21,15 +23,27 @@ public class User {
         return password;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public User(String id, String username, String password, Role role) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
     public User(String id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
     }
 
-    public User(String username, String password) {
+    public User(String username, String password, Role role) {
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
     public void initialize() {

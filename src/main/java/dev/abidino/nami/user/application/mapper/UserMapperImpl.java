@@ -10,21 +10,21 @@ import org.springframework.stereotype.Service;
 public class UserMapperImpl implements UserMapper {
     @Override
     public User toUser(UserDto userDto) {
-        return new User(userDto.username(), userDto.password());
+        return new User(userDto.username(), userDto.password(), userDto.role());
     }
 
     @Override
     public User toUser(UserEntity userEntity) {
-        return new User(userEntity.getId(), userEntity.getUsername(), userEntity.getPassword());
+        return new User(userEntity.getId(), userEntity.getUsername(), userEntity.getPassword(), userEntity.getRole());
     }
 
     @Override
     public UserEntity toUserEntity(User user) {
-        return new UserEntity(user.getId(), user.getUsername(), user.getPassword());
+        return new UserEntity(user.getId(), user.getUsername(), user.getPassword(), user.getRole());
     }
 
     @Override
     public UserResource toUserResource(User user) {
-        return new UserResource(user.getUsername(), user.getPassword());
+        return new UserResource(user.getUsername(), user.getPassword(), user.getRole());
     }
 }

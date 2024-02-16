@@ -1,15 +1,25 @@
 package dev.abidino.nami.user.application.api;
 
 import dev.abidino.nami.NamiApplication;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(NamiApplication.API_PREFIX + "/user")
-public record UserController(UserClient userClient) {
+public class UserController {
+
+    private final UserClient userClient;
+
+    public UserController(UserClient userClient) {
+        this.userClient = userClient;
+    }
+
     @GetMapping("/all")
-    List<UserResource> all() {
+    @PreAuthorize("hasRole(ADMIN)")
+    List<UserResource> all(Authentication authentication) {
         return userClient.all();
     }
 

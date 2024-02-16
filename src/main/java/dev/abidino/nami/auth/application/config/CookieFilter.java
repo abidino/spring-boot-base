@@ -11,16 +11,23 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
 public class CookieFilter extends GenericFilterBean {
+
+    private final UserDetailsService userDetailService;
+
+    public CookieFilter(UserDetailsService userDetailService) {
+        this.userDetailService = userDetailService;
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -50,7 +57,8 @@ public class CookieFilter extends GenericFilterBean {
             String secret = values[1];
             String calculateHmac = Token.calculateHmac(username);
             if (Objects.equals(secret, calculateHmac)) {
-                return new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+                UserDetails userDetails = userDetailService.loadUserByUsername(username);
+                return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
             }
         }
 

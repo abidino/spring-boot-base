@@ -32,6 +32,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserResource register(SignUpDto signUpDto) {
         String encodedPassword = passwordEncoder.encode(signUpDto.password());
-        return userExternalApiClient.save(new UserDto(signUpDto.username(), encodedPassword));
+        return userExternalApiClient.save(new UserDto(signUpDto.username(), encodedPassword, signUpDto.role()));
     }
 }

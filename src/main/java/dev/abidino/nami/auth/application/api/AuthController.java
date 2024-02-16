@@ -1,9 +1,9 @@
 package dev.abidino.nami.auth.application.api;
 
 import dev.abidino.nami.NamiApplication;
+import dev.abidino.nami.auth.application.config.CookieUtil;
 import dev.abidino.nami.auth.domain.AuthService;
 import dev.abidino.nami.auth.domain.Token;
-import dev.abidino.nami.auth.application.config.CookieUtil;
 import dev.abidino.nami.user.application.api.UserResource;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;

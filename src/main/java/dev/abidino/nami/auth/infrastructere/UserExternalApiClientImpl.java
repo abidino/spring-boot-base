@@ -14,7 +14,6 @@ public class UserExternalApiClientImpl implements UserExternalApiClient {
         this.userClient = userClient;
     }
 
-
     public UserResource save(UserDto userDto) {
         return userClient.save(userDto);
     }
