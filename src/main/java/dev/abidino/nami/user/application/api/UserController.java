@@ -18,7 +18,7 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole(ADMIN)")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     List<UserResource> all(Authentication authentication) {
         return userClient.all();
     }
